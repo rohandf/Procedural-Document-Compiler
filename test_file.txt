@@ -1,0 +1,18 @@
+This is a test file used to test the PDC.
+
+Inline text query replacement: {{Q:Example1, Inline text query replacement example}}
+Second text query replacement:
+{{Q:ExampleSecond, Second text query example}}
+
+
+Repeated query by name:
+{{Q:Example1}}
+{{Q:ExampleSecond}}
+
+Calculation query example:
+Addition: {{C:[varA]+[varB]}}
+Subtract: {{C:[varA]-[varB]}}
+Division: {{C:[varA]/[varB]}}
+Modulus : {{C:[varA]%[varB]}}
+
+Dropdowns not implemented yet.

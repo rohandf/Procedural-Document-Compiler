@@ -1,2 +1,4 @@
 .vs/
+.venv/
+tests/
 TODO.md

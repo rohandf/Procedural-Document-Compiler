@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
 from tkinter import scrolledtext
+from tkinter import messagebox
 import backend as pdc
 
 print("Program Initialised...")
@@ -53,16 +54,43 @@ t1_canvas.pack(side="left",fill="both",expand=True)
 t1_scroll.pack(side="right",fill="y")
 # t1_scroll_frame.pack(fill="both",expand=True)
 
+t2_canvas = Canvas(tab2) 
+t2_scroll = ttk.Scrollbar(tab2,orient="vertical",command=t2_canvas.yview)
+t2_scroll_frame = ttk.Frame(t2_canvas)
+t2_scroll_frame.bind(
+    "<Configure>",
+    lambda e: t2_canvas.configure(
+        scrollregion=t2_canvas.bbox("all")
+    )
+)
+t2_canvas.create_window((0, 0), window=t2_scroll_frame, anchor="nw")
+t2_canvas.configure(yscrollcommand=t2_scroll.set)
+t2_scroll_frame.grid_columnconfigure(2,weight=1)
+
+t2_canvas.pack(side="left",fill="both",expand=True)
+t2_scroll.pack(side="right",fill="y")
+# t1_scroll_frame.pack(fill="both",expand=True)
+
+
 queries_in_template = [] # Stores the queries retrieved from template.
-entry_dict = {} # Stores dict of entries.
-label_dict = {}
+text_entry_dict = {} # Stores dict of entries.
+text_label_dict = {}
+drop_option_dict = {}
+drop_label_dict = {}
 def open_template():
-    global entry_dict
-    global label_dict
+    # Clear existing template stuff
+    global text_entry_dict
+    global text_label_dict
+    global drop_option_dict
+    global drop_label_dict
     global queries_in_template
-    entry_dict.clear()
-    label_dict.clear()
+    text_entry_dict.clear()
+    text_label_dict.clear()
+    drop_option_dict.clear()
+    drop_label_dict.clear()
     for element in t1_scroll_frame.winfo_children():
+        element.destroy()
+    for element in t2_scroll_frame.winfo_children():
         element.destroy()
 
     print("Opening File...")
@@ -83,18 +111,34 @@ def open_template():
     # CONNECTION TO BACKEND
     queries = pdc.find_queries(input_file) # List of three lists: text, var and dropdown queries
     if type(queries) is str: # If it's a string, show a popup.
-        print(queries) # Replace this with proper error popup
+        print(queries)
+        messagebox.showinfo(title="Notice!",message=queries)
     else:
         queries_in_template = queries # set global variable for later use during replacing.
         # iterate over each list and spawn text boxes for each.
+
         # Add text queries programatically:
         for idx, text_query in enumerate(queries[0]):
             ttk.Label(t1_scroll_frame, text=str(idx+1)).grid(row=idx,column=0)
-            label_dict[idx] = Label(t1_scroll_frame, text=text_query[2],wraplength=300)
-            label_dict[idx].grid(row=idx,column=1)
-            entry_dict[text_query[1]] = scrolledtext.ScrolledText(t1_scroll_frame,height=4)
-            entry_dict[text_query[1]].grid(row=idx,column=2,sticky=EW)
+            text_label_dict[idx] = Label(t1_scroll_frame, text=text_query[2],wraplength=300)
+            text_label_dict[idx].grid(row=idx,column=1)
+            text_entry_dict[text_query[1]] = scrolledtext.ScrolledText(t1_scroll_frame,height=4)
+            text_entry_dict[text_query[1]].grid(row=idx,column=2,sticky=EW)
             t1_scroll_frame.grid_rowconfigure(idx, weight=1)
+
+        # Add dropdown queries programatically:
+        for idx, drop_query in enumerate(queries[2]):
+            ttk.Label(t2_scroll_frame, text=str(idx+1)).grid(row=idx,column=0)
+            drop_label_dict[idx] = Label(t2_scroll_frame, text=drop_query[1],wraplength=300)
+            drop_label_dict[idx].grid(row=idx,column=1)
+            drop_choices = drop_query[2].split('|')
+            choice_value = StringVar(t2_scroll_frame)
+            drop_option_dict[drop_query[1]] = (choice_value, OptionMenu(t2_scroll_frame,choice_value,*drop_choices))
+            drop_option_dict[drop_query[1]].grid(row=idx,column=2,sticky=EW)
+            t2_scroll_frame.grid_rowconfigure(idx,weight=1)
+            
+            
+
 
 ttk.Label(root, text="Import template").grid(row=0,column=0)
 ttk.Button(root, text="Browse", command=open_template).grid(row=0,column=1,columnspan=3,sticky=EW)
@@ -102,7 +146,7 @@ ttk.Button(root, text="Browse", command=open_template).grid(row=0,column=1,colum
 def compile_document():
     filled_text_queries = {}
     #Gather text from all entries:
-    for name, entry in entry_dict.items():
+    for name, entry in text_entry_dict.items():
         filled_text_queries[name] = entry.get("1.0", END).strip()
     #Gather dropdown choices:
     dropdown_test = []

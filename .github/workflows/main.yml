@@ -30,8 +30,8 @@ jobs:
             nuitka-version: main
             script-name: src/main.py
             mode: onefile
-            options: --onefile-appimage
             enable-plugins: tk-inter
+            args: --onefile-appimage
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4

@@ -39,6 +39,6 @@ jobs:
         with:
           name: ${{ runner.os }} Build
           path: |
-            build/*.exe
-            build/*.bin
+            build/PDC.exe
+            build/PDC
           include-hidden-files: true

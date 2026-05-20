@@ -1,0 +1,15 @@
+on:
+  workflow_dispatch:
+jobs:
+  pyinstaller-build:
+    runs-on: ubuntu-slim
+    steps:
+      - name: PyInstaller Action
+        uses: Martin005/pyinstaller-action@v1.2.0
+        with:
+          python_ver: '3.14.5'
+          spec: 'src/main.py'
+          requirements: 'requirements.txt'
+          upload_exe_with_name: 'PDC'
+          options: --onefile, --name "Procedural Document Compiler" --windowed
+          

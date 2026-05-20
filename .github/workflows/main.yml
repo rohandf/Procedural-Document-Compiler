@@ -31,7 +31,6 @@ jobs:
             script-name: src/main.py
             mode: onefile
             enable-plugins: tk-inter
-            args: --onefile-appimage
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4

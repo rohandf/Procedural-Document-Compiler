@@ -46,13 +46,16 @@ t1_scroll_frame.bind(
         scrollregion=t1_canvas.bbox("all")
     )
 )
-t1_canvas.create_window((0, 0), window=t1_scroll_frame, anchor="nw")
+t1_canvas_window = t1_canvas.create_window((0, 0), window=t1_scroll_frame, anchor="nw")
+t1_canvas.bind(
+    "<Configure>",
+    lambda e: t1_canvas.itemconfig(t1_canvas_window, width=e.width)
+)
 t1_canvas.configure(yscrollcommand=t1_scroll.set)
 t1_scroll_frame.grid_columnconfigure(2,weight=1)
 
 t1_canvas.pack(side="left",fill="both",expand=True)
 t1_scroll.pack(side="right",fill="y")
-# t1_scroll_frame.pack(fill="both",expand=True)
 
 t2_canvas = Canvas(tab2) 
 t2_scroll = ttk.Scrollbar(tab2,orient="vertical",command=t2_canvas.yview)
@@ -63,13 +66,17 @@ t2_scroll_frame.bind(
         scrollregion=t2_canvas.bbox("all")
     )
 )
-t2_canvas.create_window((0, 0), window=t2_scroll_frame, anchor="nw")
+t2_canvas_window = t2_canvas.create_window((0, 0), window=t2_scroll_frame, anchor="nw")
+t2_canvas.bind(
+    "<Configure>",
+    lambda e: t2_canvas.itemconfig(t2_canvas_window, width=e.width)
+)
+
 t2_canvas.configure(yscrollcommand=t2_scroll.set)
 t2_scroll_frame.grid_columnconfigure(2,weight=1)
 
 t2_canvas.pack(side="left",fill="both",expand=True)
 t2_scroll.pack(side="right",fill="y")
-# t1_scroll_frame.pack(fill="both",expand=True)
 
 
 queries_in_template = [] # Stores the queries retrieved from template.
@@ -133,8 +140,10 @@ def open_template():
             drop_label_dict[idx].grid(row=idx,column=1)
             drop_choices = drop_query[2].split('|')
             choice_value = StringVar(t2_scroll_frame)
-            drop_option_dict[drop_query[1]] = (choice_value, OptionMenu(t2_scroll_frame,choice_value,*drop_choices))
-            drop_option_dict[drop_query[1]].grid(row=idx,column=2,sticky=EW)
+            opt_menu = OptionMenu(t2_scroll_frame,choice_value,*drop_choices)
+            opt_menu.config(width=20)
+            drop_option_dict[drop_query[1]] = (choice_value, opt_menu)
+            drop_option_dict[drop_query[1]][1].grid(row=idx,column=2,sticky=EW)
             t2_scroll_frame.grid_rowconfigure(idx,weight=1)
             
             
@@ -145,15 +154,19 @@ ttk.Button(root, text="Browse", command=open_template).grid(row=0,column=1,colum
 
 def compile_document():
     filled_text_queries = {}
+    filled_drop_queries = {}
     #Gather text from all entries:
     for name, entry in text_entry_dict.items():
         filled_text_queries[name] = entry.get("1.0", END).strip()
     #Gather dropdown choices:
-    dropdown_test = []
+    for name, (choice_value,opt_menu) in drop_option_dict.items():
+        filled_drop_queries[name] = choice_value.get()
     #Gather variables:
     variable_test = []
-    filled_queries = [filled_text_queries,dropdown_test,variable_test]
-    pdc.compile(chosen_template_display.get(), filled_queries, queries_in_template) # Send template file path, filled queries, and retrieved queries
+    filled_queries = [filled_text_queries,filled_drop_queries,variable_test]
+    if len(chosen_template_display.get())>0:
+        pdc.compile(chosen_template_display.get(), filled_queries, queries_in_template) # Send template file path, filled queries, and retrieved queries
+    messagebox.showerror(title="Error!",message="No template has been loaded.")
 
 ttk.Button(root, text="Compile Document", command=compile_document).grid(row=5, column=0, columnspan=4,sticky=EW)
 

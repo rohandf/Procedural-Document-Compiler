@@ -314,8 +314,8 @@ def compile(file_path, filled_queries, raw_queries):
     file_ext = file_path[file_path.rindex('.'):]
     match file_ext:
         case '.txt':
-            compile_txt(filled_queries, raw_queries, file_path)
+            return(compile_txt(filled_queries, raw_queries, file_path))
         case '.docx':
-            compile_docx(filled_queries, raw_queries, file_path)
+            return(compile_docx(filled_queries, raw_queries, file_path))
         case _:
             return(raise_error("ERR_INV_FORMAT"))

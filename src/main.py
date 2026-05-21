@@ -29,13 +29,13 @@ field_tabs.grid(row=4,column=0,columnspan=4,sticky=NSEW)
 
 tab1 = ttk.Frame(field_tabs)
 tab2 = ttk.Frame(field_tabs)
-tab3 = ttk.Frame(field_tabs)
+# tab3 = ttk.Frame(field_tabs)
 
 # tab1.grid_columnconfigure(2,weight=1)
 
 field_tabs.add(tab1,text="Text Queries")
 field_tabs.add(tab2,text="Dropdowns")
-field_tabs.add(tab3,text="Variables")
+# field_tabs.add(tab3,text="Variables")
 
 t1_canvas = Canvas(tab1) 
 t1_scroll = ttk.Scrollbar(tab1,orient="vertical",command=t1_canvas.yview)
@@ -165,8 +165,10 @@ def compile_document():
     variable_test = []
     filled_queries = [filled_text_queries,filled_drop_queries,variable_test]
     if len(chosen_template_display.get())>0:
-        pdc.compile(chosen_template_display.get(), filled_queries, queries_in_template) # Send template file path, filled queries, and retrieved queries
-    messagebox.showerror(title="Error!",message="No template has been loaded.")
+        cmp_result = pdc.compile(chosen_template_display.get(), filled_queries, queries_in_template) # Send template file path, filled queries, and retrieved queries
+        messagebox.showinfo(title="Notice!",message=cmp_result)
+    else:
+        messagebox.showerror(title="Error!",message="No template has been loaded.")
 
 ttk.Button(root, text="Compile Document", command=compile_document).grid(row=5, column=0, columnspan=4,sticky=EW)
 

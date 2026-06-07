@@ -78,6 +78,35 @@ t2_scroll_frame.grid_columnconfigure(2,weight=1)
 t2_canvas.pack(side="left",fill="both",expand=True)
 t2_scroll.pack(side="right",fill="y")
 
+def create_option_popup(var, choices, button): # Replaced dropdown menu with option popup
+    option_popup = Toplevel(root)
+    option_popup.title("Choose an option...")
+    option_popup.geometry("300x450")
+    option_popup.minsize(300,400)
+    option_popup.grab_set()
+
+    opt_canvas = Canvas(popup)
+    opt_scrollbar = ttk.Scrollbar(popup, orient="vertical", command=opt_canvas.yview)
+    opt_scroll_frame = ttk.Frame(opt_canvas)
+
+    opt_scroll_frame.bind(
+        "<Configure>",
+        lambda e: opt_canvas.configure(scrollregion=opt_canvas.bbox("all"))
+    )
+    opt_canvas_window = opt_canvas.create_window((0,0), window=opt_scroll_frame, anchor="nw")
+    opt_canvas.bind(
+        "<Configure>",
+        lambda e: opt_canvas.itemconfig(opt_canvas_window, width=e.width)
+    )
+    opt_canvas.configure(yscrollcommand=opt_scrollbar.set)
+
+    opt_canvas.pack(side="left", fill="both", expand=True)
+    opt_scrollbar.pack(side="right", fill="y")
+
+    def on_select():
+        selected_text = var.get()
+        preview = selected_text[:25]+"..." if len(selected_text) > 25 else selected_text
+        
 
 queries_in_template = [] # Stores the queries retrieved from template.
 text_entry_dict = {} # Stores dict of entries.

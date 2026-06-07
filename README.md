@@ -6,7 +6,7 @@ A tool that can be used to populate templates.
 - Write Parsers
     - ~~txt~~
     - other txt based files
-    - docx
+    - ~~docx~~
     - odf
 - ~~Find queries and create textboxes for each~~
 - Find Dropdown queries and create dropdown options

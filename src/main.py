@@ -85,8 +85,8 @@ def create_option_popup(var, choices, button): # Replaced dropdown menu with opt
     option_popup.minsize(300,400)
     option_popup.grab_set()
 
-    opt_canvas = Canvas(popup)
-    opt_scrollbar = ttk.Scrollbar(popup, orient="vertical", command=opt_canvas.yview)
+    opt_canvas = Canvas(option_popup)
+    opt_scrollbar = ttk.Scrollbar(option_popup, orient="vertical", command=opt_canvas.yview)
     opt_scroll_frame = ttk.Frame(opt_canvas)
 
     opt_scroll_frame.bind(
@@ -106,7 +106,22 @@ def create_option_popup(var, choices, button): # Replaced dropdown menu with opt
     def on_select():
         selected_text = var.get()
         preview = selected_text[:25]+"..." if len(selected_text) > 25 else selected_text
-        
+        button.config(text=preview)
+        option_popup.destroy()
+    
+    for choice in choices:
+        # Standard Tkinter Radiobutton supports 'wraplength' beautifully
+        rb = Radiobutton(
+            opt_scroll_frame, 
+            text=choice, 
+            variable=var, 
+            value=choice, 
+            wraplength=250,     # Wraps text to fit the popup window width
+            justify="left", 
+            anchor="w",
+            command=on_select   # Auto-closes and updates when clicked
+        )
+        rb.pack(fill="x", padx=10, pady=8)
 
 queries_in_template = [] # Stores the queries retrieved from template.
 text_entry_dict = {} # Stores dict of entries.
@@ -169,9 +184,17 @@ def open_template():
             drop_label_dict[idx].grid(row=idx,column=1)
             drop_choices = drop_query[2].split('|')
             choice_value = StringVar(t2_scroll_frame)
-            opt_menu = OptionMenu(t2_scroll_frame,choice_value,*drop_choices)
-            opt_menu.config(width=20)
-            drop_option_dict[drop_query[1]] = (choice_value, opt_menu)
+
+            # Removed option dropdown code!
+            # opt_menu = OptionMenu(t2_scroll_frame,choice_value,*drop_choices)
+            # opt_menu.config(width=20)
+            # New popup menu code:
+            opt_menu_btn = ttk.Button(t2_scroll_frame, text="Select option...")
+            opt_menu_btn.config(
+                command=lambda v=choice_value, c=drop_choices, b=opt_menu_btn: create_option_popup(v, c, b)
+            )
+            # drop_option_dict[drop_query[1]] = (choice_value, opt_menu)
+            drop_option_dict[drop_query[1]] = (choice_value, opt_menu_btn)
             drop_option_dict[drop_query[1]][1].grid(row=idx,column=2,sticky=EW)
             t2_scroll_frame.grid_rowconfigure(idx,weight=1)
             

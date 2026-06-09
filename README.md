@@ -9,7 +9,7 @@ A tool that can be used to populate templates.
     - ~~docx~~
     - odf
 - ~~Find queries and create textboxes for each~~
-- Find Dropdown queries and create dropdown options
+- ~~Find Dropdown queries and create dropdown options~~ (Renamed to Option Queries)
 - Find calculation queries and create fields for filling variables
 - Option to save data to database (sqlite, name chosen by user)
 - Option to export doc to PDF
@@ -25,7 +25,7 @@ eg: `{{Q:CoAddress, Address of the Company}}`
 eg: `{{D:Item Type,[<Soda, The soda is fizzy>,<Sandwich, The sandwich is fresh>]}}`  
 `{{D:Dropdown Name}}`(will use values of existing dropdown of same name)
 
-### Calculation and Variables:
+### Calculation and Variables: *(Not implemented yet!)*
 `{{C:[varA]+-/*[varB]}}`  
 eg: Assets = `{{C:[Liabilities]+[Equity]}}`  
 Creates two variable boxes, allowing you to fill in variables for calculation. Can contain any number of variables. If multiple calculation queries contain the same variable, it will reuse the value.

@@ -210,13 +210,18 @@ def compile_document():
     #Gather text from all entries:
     for name, entry in text_entry_dict.items():
         filled_text_queries[name] = entry.get("1.0", END).strip()
+        # if len(filled_text_queries[name]) < 1: # If the text box is empty,
+        #     filled_text_queries[name] = queries_in_template[0][]
+
     #Gather dropdown choices:
     for name, (choice_value,opt_menu) in drop_option_dict.items():
         filled_drop_queries[name] = choice_value.get()
+        # if len(filled_drop_queries[name]) < 1: # If no option is chosen,
+        #     pass
     #Gather variables:
     variable_test = []
     filled_queries = [filled_text_queries,filled_drop_queries,variable_test]
-    if len(chosen_template_display.get())>0:
+    if len(chosen_template_display.get())>0: # If a template is loaded
         cmp_result = pdc.compile(chosen_template_display.get(), filled_queries, queries_in_template) # Send template file path, filled queries, and retrieved queries
         messagebox.showinfo(title="Notice!",message=cmp_result)
     else:

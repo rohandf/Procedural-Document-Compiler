@@ -151,10 +151,14 @@ def compile_txt(fq, rq, file_path):
         rqn = item[1] #query name
         result = fq[0][rqn]
         replacer_dict[oq] = result
+        if len(result) < 1:
+            replacer_dict[oq] = oq
         # duplicate dict entries for repeated queries
         # tq_repeated_rx = re.compile(r"{{Q:[^,{}]+") #Finds text queries upto the first comma. add }} to get repeated query
         rtq = str("{{Q:"+str(rqn)+"}}")
         replacer_dict[rtq] = result
+        if len(result) < 1:
+            replacer_dict[rtq] = rtq
     # print(tq_replacer_dict)
     #dropdown queries
     for item in rq[2]:
@@ -162,8 +166,12 @@ def compile_txt(fq, rq, file_path):
         oqn = item[1]
         result = fq[1][oqn]
         replacer_dict[oq] = result
-        rtq = str("{{D:"+str(oqn)+"}}")
-        replacer_dict[rtq] = result
+        if len(result) < 1:
+            replacer_dict[oq] = oq
+        rdq = str("{{D:"+str(oqn)+"}}")
+        replacer_dict[rdq] = result
+        if len(result) < 1:
+            replacer_dict[rdq] = rdq
     #calc queries TODO
     
     new_file_lines = []
@@ -207,10 +215,14 @@ def compile_docx(fq, rq, file_path):
         oqn = item[1] #query name
         result = fq[0][oqn]
         replacer_dict[oq] = result
+        if len(result) < 1:
+            replacer_dict[oq] = oq
         # duplicate dict entries for repeated queries
         # tq_repeated_rx = re.compile(r"{{Q:[^,{}]+") #Finds text queries upto the first comma. add }} to get repeated query
         rtq = str("{{Q:"+str(oqn)+"}}")
         replacer_dict[rtq] = result
+        if len(result) < 1:
+            replacer_dict[rtq] = rtq
     # print(tq_replacer_dict)
     #dropdown queries
     for item in rq[2]:
@@ -218,8 +230,12 @@ def compile_docx(fq, rq, file_path):
         oqn = item[1]
         result = fq[1][oqn]
         replacer_dict[oq] = result
-        rtq = str("{{D:"+str(oqn)+"}}")
-        replacer_dict[rtq] = result
+        if len(result) < 1:
+            replacer_dict[oq] = oq
+        rdq = str("{{D:"+str(oqn)+"}}")
+        replacer_dict[rdq] = result
+        if len(result) < 1:
+            replacer_dict[rdq] = rdq
 
     #calc queries TODO
 
@@ -227,7 +243,10 @@ def compile_docx(fq, rq, file_path):
     def replace_in_paragraphs(paragraphs):
         for paragraph in paragraphs:
             for target_tag, new_value in replacer_dict.items():
-                while target_tag in paragraph.text:
+                while target_tag in paragraph.text and target_tag!=new_value:
+                    print(target_tag)
+                    print("=====================")
+                    print(paragraph.text)
                     # We look at the total combined text and find the character index of the tag
                     full_text = paragraph.text
                     start_idx = full_text.find(target_tag)
@@ -238,7 +257,8 @@ def compile_docx(fq, rq, file_path):
                     end_run_idx = None
                     
                     # Locate which runs contain the start and end of our tag
-                    for i, run in enumerate(paragraph.runs):
+                    for i, run in enumerate(paragraph.runs): # TODO GETS STUCK HERE ON EMPTY INPUTS
+                        print(enumerate(paragraph.runs))
                         run_len = len(run.text)
                         if start_run_idx is None and current_idx <= start_idx < current_idx + run_len:
                             start_run_idx = i

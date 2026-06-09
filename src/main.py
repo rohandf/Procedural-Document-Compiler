@@ -34,7 +34,7 @@ tab2 = ttk.Frame(field_tabs)
 # tab1.grid_columnconfigure(2,weight=1)
 
 field_tabs.add(tab1,text="Text Queries")
-field_tabs.add(tab2,text="Dropdowns")
+field_tabs.add(tab2,text="Option Queries")
 # field_tabs.add(tab3,text="Variables")
 
 t1_canvas = Canvas(tab1) 

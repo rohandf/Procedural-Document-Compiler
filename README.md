@@ -32,3 +32,9 @@ eg: `{{D:Item Type,[<Soda, The soda is fizzy>,<Sandwich, The sandwich is fresh>]
 `{{C:[varA]+-/*[varB]}}`  
 eg: Assets = `{{C:[Liabilities]+[Equity]}}`  
 Creates two variable boxes, allowing you to fill in variables for calculation. Can contain any number of variables. If multiple calculation queries contain the same variable, it will reuse the value.
+
+# Issues:
+If you have run into issues and bugs, please remember that this project is still in its infancy. They will be fixed over time.
+
+# For contributors:
+I am a student working on this in my spare time. I am not taking contributions or PRs from people. Please refrain from creating PRs. I will likely not have the time to review your code.

@@ -1,6 +1,9 @@
 # Procedural-Document-Compiler
 A tool that can be used to populate templates.
 
+### Download here:
+[CLICK TO GO TO LATEST RELEASE. DOWNLOAD VERSION APPROPRIATE TO YOUR OS, AND DOWNLOAD THE MANUAL PDF.](https://github.com/rohandf/Procedural-Document-Compiler/releases/latest)
+
 # Todo:
 - ~~Create Main UI HTML~~ (Created natively in Tkinter)
 - Write Parsers
